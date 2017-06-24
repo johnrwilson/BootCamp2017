@@ -3,6 +3,7 @@ MANIFEST
 build/*
 dist/*
 *.aux
+*.tex
 *.bbl
 *.blg
 *.fdb_latexmk

@@ -32,13 +32,9 @@ def prob3():
     for c in cs:
         x0=2.0
         x1=1.0
-        while (x0 - x1 > 1e-13):
+        while abs(x0 - x1) > 1e-13:
             x0 = x1
-            x = x0*np.ones(3)
-            z = np.zeros(3)
-            z[w>x]=w[w>x]
-            z[w<x]=x[w<x]
-            x1 = c * (1 - beta) + beta * np.dot(z,p)
+            x1 = c * (1 - beta) + beta * np.sum(np.maximum(w,x0)*p)
         w_bars.append(x1)
     plt.plot(cs,w_bars)
     plt.xlabel("Compensation value")

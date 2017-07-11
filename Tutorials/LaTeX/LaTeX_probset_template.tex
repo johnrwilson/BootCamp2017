@@ -66,49 +66,103 @@
 \begin{document}
 
 \begin{flushleft}
-  \textbf{\large{Problem Set \#[insert the problem set number]}} \\
-  MACS 30000, Dr. Evans \\
-  Your Name
+  \textbf{\large{Problem Set \#[2]}} \\
+  OSM Lab, Zachary Boyd \\
+  John Wilson
 \end{flushleft}
 
 \vspace{5mm}
 
-\noindent\textbf{Problem 1}
-You could put some description here, or you could just list your answer.
-\textbf{Part (a).} Put your answer to part (a) here. You might also need to include an equation.
-\begin{equation*}
-  \Omega_{j,t} = \left(\frac{\int_{m=4}^\infty(2t + 7m)dm}{\sum_{x=1}^23\sin(\theta_{j,x})}\right) + 7
-\end{equation*}
-You could refer to that object from the equation in math mode $\Omega_{j,t}$ in the sentence. Or if you wanted to talk about the equation, you could remove the asterisks, give it a label, and refer to it with references.
-\begin{equation}\label{EqCoolness}
-  \Omega_{j,t} = \left(\frac{\int_{m=4}^\infty(2t + 7m)dm}{\sum_{x=1}^23\sin(\theta_{j,x})}\right) + 7
-\end{equation}
-Look how cool equation \eqref{EqCoolness} is.
+\noindent\textbf{Problem 3.1}\\
+\textbf{i)}
+\begin{multline*}
+\frac{1}{4} ( \| x+y \|^2 - \| x - y \|^2) = \frac{1}{4}( \langle x+y,x+y \rangle - \langle x-y,x-y \rangle ) = \\ \frac{1}{4}(\langle x,x \rangle + 2 \langle x,y \rangle + \langle y,y \rangle - \langle x,x \rangle + 2 \langle x,y \rangle - \langle y,y \rangle) = \langle x,y \rangle
+\end{multline*}
+\textbf{ii)}
+\begin{multline*}
+\frac{1}{2} ( \| x+y \|^2 + \| x-y \|^2) = \frac{1}{2}(\langle x+y,x+y \rangle + \langle x-y,x-y \rangle) =\\ \frac{1}{2}( \langle x,x \rangle + 2\langle x,y \rangle + \langle y,y \rangle + \langle x,x \rangle -2\langle x,y \rangle + \langle y,y \rangle) = \|x\|^2 + \|y\|^2
+\end{multline*}
 
-You might want to include a table in your \LaTeX document. For this, you use the \texttt{tabular} environment.
-\begin{table}[htbp] \centering \captionsetup{width=6.0in}
-\caption{\label{TabExample}\textbf{Sweet example table}}
-  \begin{threeparttable}
-  \begin{tabular}{>{\small}l |>{\small}l >{\small}c |>{\small}r}
-    \hline\hline
-    Degrees & Time to completion & happiness (1-10) & added value (1-10) \\
-    \hline
-    High school diploma & 3.9 years & 5 & 2 \\
-    Bachelor's degree   & 3.8 years & 7 & 5 \\
-    Master's degree     & 1.7 years & 8 & 4 \\
-    PhD                 & 5.7 years & 3 & 7 \\
-    \hline\hline
-  \end{tabular}
-  \begin{tablenotes}
-    \scriptsize{\item[*]With this \texttt{threeparttable} environment, you can add nice subtext to a table.}
-  \end{tablenotes}
-  \end{threeparttable}
-\end{table}
-Lastly, you can add figures to your document. Just make sure that the reference to the figure has the right file path. Figure \ref{FigExample} is pretty nice. But, ideally, you would have something better than a pencil drawing. But you can just place any \texttt{.png} file into the \texttt{includegraphics} command.
-\begin{figure}[htb]\centering\captionsetup{width=4.0in}
-  \caption{\textbf{Great example figure}}\label{FigExample}
-  \fbox{\resizebox{4.0in}{3.0in}{\includegraphics{pencildrawing.png}}}
-\end{figure}
+\noindent\textbf{Problem 3.2}\\
+Expansion of the norms into inner products and then separation by linearity yields
+\begin{multline*}
+\frac{1}{4}(\| x+y \|^2 - \| x - y \|^2 + i \|x - i y \|^2 - i \| x + i y \|^2) = \\ 
+\frac {1}{4}(\langle x,x \rangle +\langle x,y \rangle + \langle y,x \rangle + \langle y,y \rangle - \langle x,x \rangle  + \langle x,y \rangle + \langle y,x \rangle - \langle y,y \rangle + i \langle x,x \rangle + \ldots \\ \langle x,y \rangle - \langle y,x \rangle + i \langle y,y \rangle - i \langle x,x \rangle + \langle x,y \rangle - \langle y,x \rangle - i \langle y,y \rangle = \langle x,y \rangle
+\end{multline*}
+
+\noindent\textbf{Problem 3.3}\\
+By definition 3.3.18, we have that given vectors x and y, $cos \theta = \frac{\langle x, y \rangle}{\| x \| \| y \|}$.\\
+\textbf{i)} Note $\sqrt{\int_0^1 x^2 dx} = \frac{1}{\sqrt{3}}$, $\sqrt{\int_0^1 x^{10} dx} = \frac{1}{\sqrt{11}}$, and $\int_0^1 x^6 dx = \frac{1}{7}$. So $\theta = \cos^{-1}\left( \frac{\sqrt{33}}{7}\right)$\\
+\textbf{ii)}We have $\sqrt{\int_0^1 x^4 dx} = \frac{1}{\sqrt{5}}$, $\sqrt{\int_0^1 x^{8} dx} = \frac{1}{3}$, and $\int_0^1 x^6 dx = \frac{1}{7}$. So $\theta = \cos^{-1}\left( \frac{3\sqrt{5}}{7}\right)$\\
+
+
+\noindent\textbf{Problem 3.8}\\
+\textbf{i)} Given $\langle f, g \rangle = \frac{1}{\pi}\int_{-\pi}^{\pi}f(t)g(t)dt$, we have the following results: $\langle \cos(t), \cos(t) \rangle = 1, \langle \cos(t), \sin(t) \rangle = 0, \langle \cos(t), \cos(2t) \rangle = 0, \langle \cos(t), \sin(2t) \rangle = 0, \langle \sin(t), \sin(t) \rangle = 1,$ $\langle \sin(t), \cos(2t) \rangle = 0, \langle \sin(t), \sin(2t) \rangle = 0, \langle \cos(2t),\cos(2t) \rangle = 1, \langle \cos(2t),\sin(2t) \rangle = 0, \langle \sin(2t),\sin(2t) \rangle = 1$. Thus the set is orthonormal.\\
+\textbf{ii)} $\|t\| = \sqrt{\langle t,t \rangle} = \sqrt{ \frac{1}{\pi}\int_{-\pi}^{\pi}t^2dt } = \frac{\sqrt{6} \pi }{3}$\\
+\textbf{iii)} $proj_X(\cos (3t)) = \sum_{f \in S} \langle f, \cos (3t) \rangle f = 0$. It results that $\cos (3t)$ is orthogonal to this set.\\
+\textbf{iv)} $proj_Xt = \sum_{f \in S} \langle f, t \rangle f = 2 \sin t - \sin (2t)$\\
+
+
+\noindent\textbf{Problem 3.9}
+Let $\textbf{x} = [x_1 \quad x_2]^T, \textbf{y} = [y_1 \quad y_2]^T$ be real valued vectors. Then $\langle R_{\theta}\textbf{x}, R_{\theta}\textbf{y} \rangle = \cos ^ 2 \theta x_1 y_1 - \cos \theta \sin \theta (x_1 y_2 + x_2 y_1 ) + \sin ^ 2 \theta ( x_2 y_2 +x_1 y_1) + \cos \theta \sin \theta (x_1 y_2 + x_2 y_1 ) + \cos ^2 \theta x_2 y_2 = x_1 y_1 + x_2 y_2 = \langle x, y \rangle$, as desired.\\
+
+\noindent\textbf{Problem 3.10}
+\textbf{i)} Let Q be an orthonormal matrix. Then $ \langle Qx, Qy \rangle = \langle x, y \rangle \Rightarrow x^HQ^HQy = x^Hy \Rightarrow Q^HQy = y \Rightarrow Q^HQ = I$. By Proposition 3.2.12, we have that Q is invertible, since the field is of finite dimension n. Thus by uniqueness of inverses, we also have $QQ^H = I$, as desired.\\
+\textbf{ii)} Since i) holds, we have $\|Q\textbf{x}\| = \sqrt{\langle x^HQ^HQx \rangle} = \sqrt{\langle x^Hx \rangle} = \|x\|$.\\
+\textbf{iii)} Note that by i), $Q^{-1} = Q^H$. We have $\langle Q^Hx, Q^Hy \rangle = x^HQQ^Hy = x^Hy = \langle x, y \rangle$, as desired.\\
+\textbf{iv)} Observe that the $i^{th}$ column of Q is equal to $Qe_i$, where $e_i$ is the $i^{th}$ standard basis vector. Then $\langle Qe_i, Qe_j \rangle = \langle e_i,e_j \rangle = \delta_{i,j}$, where $\delta_{i,j}$ is the Kronecker delta. This establishes orthonormality of the columns.\\
+\textbf{v)} Let Q be orthonormal. Then we know, since $Q^HQ = 1$, that $\mathrm{det} Q^HQ = 1$. So $1=\mathrm{det} Q^HQ=(\mathrm{det}Q)^2$, so $|\mathrm{det}Q| = 1$.The converse is not true. Take the matrix \[ A= 
+\begin{bmatrix}
+    1   & 1 & 0 \\
+    0   & 1& 0 \\
+    0   & 0 &1 
+\end{bmatrix}
+\]
+This matrix has determinant 1 but the second column is not a unit vector, so it is not an orthonormal matrix.\\
+\textbf{vi)} Let $Q_1,Q_2 \in M_n(\mathbb{F})$ be orthonormal matrices. Then $\langle Q_1Q_2x,Q_1Q_2y \rangle = x^HQ_2^HQ_1^HQ_1Q_2y = x^HQ_2^HQ_2y = x^Hy = \langle x, y \rangle$, showing that the product is orthonormal.\\
+
+\noindent\textbf{Problem 3.11}
+Suppose $x_i$ is a linear combination of the elements $x_j$ of your basis set with $j<i$. When this happens, the difference $x_i - p_{i-1}$ will equal zero, and division by the norm of this difference will cause the problem to be undefined. Thus each element of the basis set must be linearly independent.\\
+
+\noindent\textbf{Problem 3.16}
+\textbf{i)} We provide a counterexample. Consider the matrices Q and R given in Example 3.3.11. Modify Q such that \[ Q= 
+\begin{bmatrix}
+    1   & -1 & 1 & -\sqrt{2} \\
+    1   & 1& -1 & 0 \\
+    1   & 1 &1 &\sqrt{2}\\
+    1 & -1 & -1 & 0
+\end{bmatrix}
+\]
+We still have that $A=QR$ and Q is orthonormal, showing that QR decompositions are not unique.\\
+\textbf{ii)} TODO\\
+
+
+\noindent\textbf{Problem 3.17}
+$A^HAx = A^Hb \Leftrightarrow \widehat{R}^H\widehat{Q}^H\widehat{Q}\widehat{R}x = \widehat{R}^H\widehat{Q}^Hb \Leftrightarrow \widehat{R}^H\widehat{R}x = \widehat{R}^H\widehat{Q}^Hb \Leftrightarrow \widehat{R}x = \widehat{Q}^Hb$\\
+
+
+\noindent\textbf{Problem 3.23}
+Note $\| x \| = \|x + y -y\| \leq \|x - y\| + \|y \|$ by the triangle inequality, so $\|x\|-\|y\| \leq \|x-y\|$. Similar logic yields $\|y\|-\|x\| \leq \|y-x\| = \|x-y\|$. Since $\left| \|x\|-\|y\| \right|$ is one of these two cases, the result is immediate.\\
+
+\noindent\textbf{Problem 3.24}
+Norm properties: 1: $\| \textbf{x} \| \geq 0$, with equality only if $x=0$. 2: $\|a\textbf{x}\| = |a|\|\textbf{x}\|$. 3: $\|\textbf{x}+\textbf{y}\| \leq \|\textbf{x}\|+\|\textbf{y}\|$.\\
+\textbf{i)} Note $|\cdot|$ is a norm, so the three properties hold. Then $\|f\|_{L^1} = \int_a^b |f(t)| dt \geq 0$ since the integrand is non-negative. Similarly, $\int_a^b |f(t)| dt = 0 \Leftrightarrow |f(t)| = 0 \Leftrightarrow f = 0$. So property 1 holds. Property 2: $\|af\|_{L^1} = \int_a^b |af(t)| dt = |a|\int_a^b |f(t)| dt = |a|\|f\|_{L^1}$. Property 3: $\|f+g\|_{L^1} = \int_a^b |f(t)+g(t)| dt \leq \int_a^b |f(t)| + |g(t)|dt = \int_a^b |f(t)| dt + \int_a^b |g(t)| dt = \|f\|_{L^1} + \|g\|_{L^1}$\\
+\textbf{ii)} 1: $\|f\|_{L^2} = \left( \int_a^b |f(t)|^2 dt \right) ^{\frac{1}{2}} \geq 0$ since the integrand is non-negative. Similarly, $\left( \int_a^b |f(t)|^2 dt \right) ^{\frac{1}{2}} = 0 \Leftrightarrow |f(t)| = 0 \Leftrightarrow f = 0$. So property 1 holds. Property 2: $\|af\|_{L^2} = \left( \int_a^b |af(t)|^2 dt \right) ^{\frac{1}{2}} = \left( \int_a^b |a|^2|f(t)|^2 dt \right) ^{\frac{1}{2}} = \left( |a|^2 \int_a^b |f(t)|^2 dt \right) ^{\frac{1}{2}} = |a|\left( \int_a^b |f(t)|^2 dt \right) ^{\frac{1}{2}} = |a|\|f\|_{L^2}$. Property 3: First observe that by i), both $\|f+g\|_{L^2}$ and $\|f\|_{L^2}+\|g\|_{L^2}$ are positive quantities. Then we can square both sides and show equivalently that $\|f+g\|_{L^2}^2 \leq \|f\|_{L^2}^2 + 2\|f\|_{L^2}\|g\|_{L^2} + \|g\|_{L^2}^2$. See that $\|f+g\|_{L^2}^2 = \int_a^b |f(t)+g(t)|^2 dt \leq \int_a^b |f(t)|^2 + |f(t)||g(t)| + |g(t)|^2 dt = \int_a^b |f(t)|^2 dt + 2 \int_a^b |f(t)||g(t)|dt + \int_a^b |g(t)|^2 dt = \|f\|_{L^2}^2 + 2\|f\|_{L^2}\|g\|_{L^2} + \|g\|_{L^2}^2$. Thus $\|f+g\|_{L^2}^2 \leq \|f\|_{L^2}^2 + 2\|f\|_{L^2}\|g\|_{L^2} + \|g\|_{L^2}^2$ and $\|f+g\|_{L^2} \leq \|f\|_{L^2} + \|g\|_{L^2}$ and 3 holds.\\
+\textbf{iii)} 1: $\|f\|_{L^{\infty}}=\sup_{x \in [a,b]}|f(t)| \geq 0$ with $\sup_{x \in [a,b]}|f(t)| = 0$ only when $f=0$, by properties of supremums and norms. 2: $\|cf\|_{L^{\infty}}=\sup_{x \in [a,b]}|cf(t)| = \sup_{x \in [a,b]}|c||f(t)| = |c|\sup_{x \in [a,b]}|f(t)| = |c|\|f\|_{L^{\infty}}$. Property 3: $\|f+g\|_{L^{\infty}}=\sup_{x \in [a,b]}|f(t)+g(t)| \leq \sup_{x \in [a,b]}|f(t)| + \sup_{x \in [a,b]}|g(t)| = \|f\|_{L^{\infty}} + \|g\|_{L^{\infty}}$ by supremum and absolute value properties.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 \end{document}

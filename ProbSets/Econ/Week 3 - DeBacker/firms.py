@@ -5,6 +5,9 @@ from numba import jit, jitclass
 import scipy.integrate as integrate
 from scipy.stats import norm
 import time
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import cm
+from scipy import optimize as opt
 
 
 @jit
@@ -41,11 +44,12 @@ def find_valuefunc_fn(ez,VFtol,VFmaxiter,V,PF,z_grid,pi,betafirm,sizek):
 
     VFI_time = time.clock() - start_time
     if VFiter < VFmaxiter:
-        print('Value function converged after this many iterations:', VFiter)
+        #print('Value function converged after this many iterations:', VFiter)
+        pass
     else:
         print('Value function did not converge')
-    print('VFI took ', VFI_time, ' seconds to solve')
-    print("VFdist was ", VFdist)
+    #print('VFI took ', VFI_time, ' seconds to solve')
+    #print("VFdist was ", VFdist)
     return V, PF, Vstore
     
     
@@ -56,7 +60,7 @@ class firm(object):
 
 
     def __init__(self, rho=0.7605, mu=0.0, sigma_eps=0.213, alpha_k=0.297, alpha_l=0.65, \
-                delta=0.154, psi=1.08, w=0.7, beta=0.04, z = None, N=9):
+                delta=0.154, psi=1.08, w=0.7, beta=0.96, z = 1.0, N=9, h=6.616):
         self.rho=rho
         self.mu=mu
         self.sigma_eps=sigma_eps
@@ -70,9 +74,8 @@ class firm(object):
         self.VFtol = 1e-6
         self.VFmaxiter = 3000
         self.N=9
-
-        if z is not None:
-            self.z=z
+        self.z=z
+        self.h = h
             
     def make_z(self,N=9):
         sigma_z = self.sigma_eps / ((1 - self.rho ** 2) ** (1 / 2))
@@ -108,7 +111,7 @@ class firm(object):
         N = self.N
         kstar = ((((1 / self.betafirm - 1 + self.delta) * ((self.w / self.alpha_l) **
                                          (self.alpha_l / (1 - self.alpha_l)))) /
-                                         (self.alpha_k * (1. ** (1 / (1 - self.alpha_l))))) **
+                                         (self.alpha_k * (self.z ** (1 / (1 - self.alpha_l))))) **
                                          ((1 - self.alpha_l) / (self.alpha_k + self.alpha_l - 1)))
         kbar = 2*kstar
         lb_k = 0.001
@@ -143,59 +146,155 @@ class firm(object):
     def find_vmat(self):
         self.Vmat = find_vmat_fn(self.V,self.ez,self.sizek,self.z_grid,self.betafirm)
         
-    def find_valuefunc(self):
+    def find_valuefunc(self, plot = False):
         self.e()
         self.V, self.PF, self.Vstore = find_valuefunc_fn(self.ez,self.VFtol,self.VFmaxiter,self.V,self.PF,\
                             self.z_grid,self.pi,self.betafirm,self.sizek)
-    
-    
-    def plot_values(self):
+        if plot:
+            for i in range(len(self.z_grid)):
+                plt.plot(self.kvec, self.V[i], label=str(self.z_grid[i]))
+            plt.xlabel("Initial capital 'k'")
+            plt.ylabel("Value function")
+            plt.legend()
+            plt.show()
+        
+        
+    def step2(self):
+        LD = np.zeros((len(self.z_grid),self.sizek))
         for i in range(len(self.z_grid)):
-            plt.plot(self.kvec, self.V[i], label=str(self.z_grid[i]))
-        plt.legend()
-        plt.show()
+            for j in range(len(self.kvec)):
+                LD[i,j] = (self.alpha_l/self.w) ** (1. / (1 - self.alpha_l)) * \
+                        self.z_grid[i] ** (1. / (1 - self.alpha_l)) * self.kvec[j] ** (self.alpha_k / (1 - self.alpha_l))
+        self.LD = LD
+        
+        ID = np.zeros((len(self.z_grid),self.sizek))
+        for i in range(len(self.z_grid)):
+            for j in range(len(self.kvec)):
+                policy = self.PF[i,j]
+                kprime = self.kvec[int(policy)]
+                ID[i,j] = kprime -  (1 - self.delta) * self.kvec[i]
+        self.ID = ID
+        
+        #If the earnings grid must be flattened into a true zxk grid, do so here
+        
+    
+    def stationary_distribution(self, plot = False):
+
+        # for finding the stationary distribution
+        Pi = self.pi
+        PF = self.PF  # the firm's policy function: k'(z,k)
+        sizez, sizek = PF.shape
+
+        # To plot the stationary distribution
+        z = self.z_grid
+        kvec = self.kvec # the grid of capital
+
+        '''
+        ------------------------------------------------------------------------
+        Compute the stationary distribution of firms over (k, z)
+        ------------------------------------------------------------------------
+        SDtol     = tolerance required for convergence of SD
+        SDdist    = distance between last two distributions
+        SDiter    = current iteration
+        SDmaxiter = maximium iterations allowed to find stationary distribution
+        Gamma     = stationary distribution
+        HGamma    = operated on stationary distribution
+        ------------------------------------------------------------------------
+        '''
+        Gamma = np.ones((sizez, sizek)) * (1 / (sizek * sizez))
+        SDtol = 1e-12
+        SDdist = 7
+        SDiter = 0
+        SDmaxiter = 1000
+        while SDdist > SDtol and SDmaxiter > SDiter:
+            HGamma = np.zeros((sizez, sizek))
+            for i in range(sizez):  # z
+                for j in range(sizek):  # k
+                    for m in range(sizez):  # z'
+                        HGamma[m, int(PF[i, j])] = \
+                            HGamma[m, int(PF[i, j])] + Pi[i, m] * Gamma[i, j]
+            SDdist = (np.absolute(HGamma - Gamma)).max()
+            Gamma = HGamma
+            SDiter += 1
+
+        if SDiter < SDmaxiter:
+            #print('Stationary distribution converged after this many iterations: ',
+            #     SDiter)
+            self.Gamma = Gamma
+        else:
+            print('Stationary distribution did not converge')
+        # plot the SD
+        if plot:
+            # Plot the stationary distribution over k
+            fig, ax = plt.subplots()
+            ax.plot(kvec, Gamma.sum(axis=0))
+            plt.xlabel('Size of Capital Stock')
+            plt.ylabel('Density')
+            plt.title('Stationary Distribution over Capital')
+            plt.show()
+
+            fig, ax = plt.subplots()
+            ax.plot(np.log(z), Gamma.sum(axis=1))
+            plt.xlabel('Log Productivity')
+            plt.ylabel('Density')
+            plt.title('Stationary Distribution over Productivity')
+            
+            
+            # Stationary distribution in 3D
+            zmat, kmat = np.meshgrid(kvec, np.log(z))
+            fig = plt.figure(figsize=(10, 8))
+            ax = fig.add_subplot(111, projection='3d')
+            ax.plot_surface(kmat, zmat, Gamma, rstride=1, cstride=1, cmap=cm.Blues,
+                            linewidth=0, antialiased=False)
+            ax.view_init(elev=20., azim=20)  # to rotate plot for better view
+            ax.set_xlabel(r'Log Productivity')
+            ax.set_ylabel(r'Capital Stock')
+            ax.set_zlabel(r'Density')
+            plt.show()
         
         
+    def find_aggregates(self):
+        Gamma = self.Gamma
+        LD = self.LD
+        ID = self.ID
+        LDagg = 0
+        Iagg = 0
+        PSIagg = 0
+        Yagg = 0
+        for i in range(len(self.z_grid)):
+            for j in range(self.sizek):
+                LDagg += (LD[i,j] * Gamma[i,j])
+                Iagg += (ID[i,j] * Gamma[i,j])
+                PSIagg += ((self.psi / 2.) * (ID[i,j] ** 2) / self.kvec[j])
+                Yagg += (self.z_grid[i] * (self.kvec[j] ** self.alpha_k) * (LD[i,j] ** self.alpha_l))
+        self.LDagg = LDagg
+        self.Iagg = Iagg
+        self.PSIagg = PSIagg
+        self.Yagg = Yagg
+        self.Cagg = Yagg - Iagg - PSIagg
+        self.LSagg = - (self.w) / (self.h * self.Cagg)
+        
+    def check_equality(self):
+        return self.LSagg - self.LDagg
         
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-    def run_all(self):
-        print("Making discrete z grid...")
+    def run_test(self, w, plot = False):
+        self.w = w
+        #print("Making discrete z grid...")
         self.make_z()
-        print("Making k grid...")
+        #print("Making k grid...")
         self.make_kgrid()
-        print("Finding value function...")
-        self.find_valuefunc()
-        print("Plotting...")
-        self.plot_values()
+        #print("Finding value function...")
+        self.find_valuefunc(plot = plot)
+        #print("Finding labor and investment demand...")
+        self.step2()
+        #print("Calculating the stationary distribution...")
+        self.stationary_distribution(plot=plot)
+        #print("Finding aggregates...")
+        self.find_aggregates()
+        #print("Finished running.")
+        return self.check_equality()
         
+if __name__ == "__main__":
+    t = firm()
+    print(opt.brentq(t.run_test,0.9,0.91))

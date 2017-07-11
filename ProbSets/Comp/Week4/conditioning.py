@@ -122,6 +122,21 @@ def prob5(n):
     Accepts an interger n and finds the least square solution to the stability data problem.
     Plots the forward errors.
     """
+    xk, yk = np.load('stability_data.npy').T
+    A = np.vander(xk, n+1)
+    cinv = la.inv(A.T@A)@A.T@yk
+    Q,R = la.qr(A,mode='economic')
+    cqr = la.solve(R,Q.T@yk)
+    dom = np.linspace(np.amin(xk),np.amax(xk),50)
+    plt.plot(xk,yk,'k*')
+    plt.plot(dom,np.polyval(cinv,dom),label='inverse method',linewidth=2)
+    plt.plot(dom,np.polyval(cqr,dom),label='qr method',linewidth=2)
+    plt.legend(loc='upper left')
+    plt.title("n={}".format(n))
+    plt.show()
+    ferr1 = la.norm(A@cinv-yk,ord=2)
+    ferr2 = la.norm(A@cqr-yk,ord=2)
+    return ferr1, ferr2
 
 # Problem 6
 def integral(n):

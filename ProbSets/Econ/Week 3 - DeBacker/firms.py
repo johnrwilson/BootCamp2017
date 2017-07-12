@@ -272,7 +272,7 @@ class firm(object):
         self.PSIagg = PSIagg
         self.Yagg = Yagg
         self.Cagg = Yagg - Iagg - PSIagg
-        self.LSagg = - (self.w) / (self.h * self.Cagg)
+        self.LSagg = -(self.w) / (self.h * self.Cagg)
         
     def check_equality(self):
         return self.LSagg - self.LDagg
@@ -297,4 +297,4 @@ class firm(object):
         
 if __name__ == "__main__":
     t = firm()
-    print(opt.brentq(t.run_test,0.9,0.91))
+    print(opt.brentq(t.run_test,0.9,.91))

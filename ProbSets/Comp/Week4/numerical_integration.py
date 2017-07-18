@@ -3,11 +3,13 @@ from matplotlib import pyplot as plt
 from scipy import stats
 from scipy import integrate
 from scipy import linalg as la
+from sympy import prime
 
 
 """
 Grading may be most easily accomplished by running the piece of code
 which can be found under the if __name__ == "__main__" block.
+First change test to True and then run the file in ipython, if you want.
 """
 
 
@@ -241,6 +243,83 @@ def test_prob7():
     print("It took N={} before the approximation was accurate to 4 decimals.".format(N))
     print("The approximated value is {}.".format(approx))
     
+def prob8(n, d, method):
+    points = np.zeros((n, d))
+    if method == "Weyl":
+        for i in range(n):
+            for j in range(d):
+                point = (i + 1) * np.sqrt(prime(j + 1))
+                points[i,j] = point - int(point)
+    elif method == "Haber":
+        for i in range(n):
+            for j in range(d):
+                point = (i + 1) * (i + 2) / 2 * np.sqrt(prime(j + 1))
+                points[i,j] = point - int(point)
+    elif method == "Niederreiter":
+        for i in range(n):
+            for j in range(d):
+                point = (i + 1) * 2 ** (float(j + 1) / (i + 2))
+                points[i,j] = point - int(point)
+    elif method == "Baker":
+        for i in range(n):
+            for j in range(d):
+                point = (i + 1) * np.exp(prime(j + 1))
+                points[i,j] = point - int(point)
+    return points
+    
+def test_prob8(plot):
+    if plot:
+        w = prob8(1000, 2, "Weyl")
+        wx = w[:,0]
+        wy = w[:,1]
+        h = prob8(1000, 2, "Haber")
+        hx = h[:,0]
+        hy = h[:,1]
+        n = prob8(1000, 2, "Niederreiter")
+        nx = n[:,0]
+        ny = n[:,1]
+        b = prob8(1000, 2, "Baker")
+        bx = b[:,0]
+        by = b[:,1]
+        plt.subplot(221)
+        plt.plot(wx, wy, ',')
+        plt.title("Weyl")
+        plt.subplot(222)
+        plt.plot(hx, hy, ',')
+        plt.title("Haber")
+        plt.subplot(223)
+        plt.plot(nx, ny, ',')
+        plt.title("Niederreiter")
+        plt.subplot(224)
+        plt.plot(bx, by, ',')
+        plt.title("Baker")
+        plt.show()
+    
+    
+def prob9(g, N):
+    x = prob8(N, 2, "Weyl")
+    x = x * 2 - 1
+    xs = x[:,0]
+    ys = x[:,1]
+    val = 0
+    vol = 4
+    for i in range(N):
+        val += g([xs[i],ys[i]])
+    return vol * val / N
+
+
+def test_prob9():
+    diff = 1
+    N=1
+    while diff > 1e-4:
+        approx = prob9(h, N)
+        diff = abs(approx - 3.1415)
+        N += 1
+    print("It took N={} before the approximation was accurate to 4 decimals.".format(N))
+    print("The approximated value is {}.".format(approx))
+    
+    
+    
 if __name__ == "__main__":
     test = False
     if test:
@@ -258,5 +337,9 @@ if __name__ == "__main__":
         test_prob6()
         print("Testing Problem 7")
         test_prob7()
+        print("Testing Problem 8")
+        test_prob8(True)
+        print("Testing Problem 9")
+        test_prob9()
     
     pass

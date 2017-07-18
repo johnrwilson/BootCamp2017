@@ -236,7 +236,7 @@ def h(pts):
 def test_prob7():
     diff = 1
     N=1
-    while diff > 1e-4:
+    while diff > 1e-5:
         approx = prob7(h, [-1,1], [-1,1], N)
         diff = abs(approx - 3.1415)
         N += 1
@@ -258,7 +258,7 @@ def prob8(n, d, method):
     elif method == "Niederreiter":
         for i in range(n):
             for j in range(d):
-                point = (i + 1) * 2 ** (float(j + 1) / (i + 2))
+                point = (i + 1) * 2 ** (float(j + 1) / (j + 2))
                 points[i,j] = point - int(point)
     elif method == "Baker":
         for i in range(n):
@@ -311,7 +311,7 @@ def prob9(g, N):
 def test_prob9():
     diff = 1
     N=1
-    while diff > 1e-4:
+    while diff > 1e-5:
         approx = prob9(h, N)
         diff = abs(approx - 3.1415)
         N += 1
